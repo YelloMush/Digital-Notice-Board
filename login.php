@@ -1,3 +1,10 @@
+<?php
+session_start();
+if (isset($_SESSION['admin'])) {
+    header("Location: dashboard.php");
+    exit();
+}
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -9,18 +16,18 @@
       background-color: #f8f9fa;
     }
     .card {
-      border: 2px solid #003366; /* Darker blue border */
+      border: 2px solid #003366;
       border-radius: 10px;
     }
     .card-header {
-      background-color: #003366; /* Darker blue background */
+      background-color: #003366;
     }
     .card-header h4 {
       margin: 0;
       font-weight: bold;
     }
     .btn-login {
-      background-color: #00509E; /* Custom dark blue */
+      background-color: #00509E;
       color: white;
       font-size: 1.1rem;
       padding: 12px 20px;
@@ -28,13 +35,19 @@
       width: 100%;
     }
     .btn-login:hover {
-      background-color: #003366; /* Darker blue on hover */
+      background-color: #003366;
     }
     .card-body {
       padding: 30px;
     }
     .form-label {
       font-weight: bold;
+    }
+    .login-hint {
+      font-size: 0.9rem;
+      color: #888;
+      text-align: center;
+      margin-top: 10px;
     }
   </style>
 </head>
@@ -47,6 +60,9 @@
             <h4>Admin Login</h4>
           </div>
           <div class="card-body">
+            <?php if (isset($_GET['error'])): ?>
+              <div class="alert alert-danger text-center">Invalid username or password</div>
+            <?php endif; ?>
             <form method="POST" action="authenticate.php">
               <div class="mb-3">
                 <label class="form-label">Username</label>
@@ -58,6 +74,9 @@
               </div>
               <button type="submit" class="btn btn-login">Login</button>
             </form>
+            <div class="login-hint">
+              Try: <strong>admin</strong>, <strong>user1</strong>, <strong>user2</strong>, <strong>user3</strong>, <strong>user4</strong>
+            </div>
           </div>
         </div>
       </div>

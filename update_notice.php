@@ -1,4 +1,5 @@
 <?php
+session_start(); // ✅ REQUIRED to use $_SESSION
 include 'db.php';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -14,6 +15,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         mysqli_stmt_bind_param($stmt, "ssssi", $title, $desc, $cat, $exp, $id);
 
         if (mysqli_stmt_execute($stmt)) {
+            // ✅ Audit log BEFORE redirect
+            $user = $_SESSION['admin'];
+            $log = "$user updated notice titled '$title' (ID $id)";
+            $log = mysqli_real_escape_string($conn, $log); // Escape for safety
+            mysqli_query($conn, "INSERT INTO audit_log (username, action) VALUES ('$user', '$log')");
+
             header("Location: dashboard.php");
             exit();
         } else {
